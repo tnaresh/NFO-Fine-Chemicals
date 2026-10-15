@@ -1,0 +1,165 @@
+:root {
+  --navy: #173b57;
+  --blue: #246b91;
+  --bg: #f3f6fa;
+  --ink: #172b3a;
+  --muted: #657786;
+  --line: #dce4ec;
+  --white: #fff;
+  --green: #19744a;
+  --red: #b42318;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.45 "Segoe UI", Arial, sans-serif;
+}
+
+button, input, select { font: inherit; }
+button { border: 0; border-radius: 8px; cursor: pointer; font-weight: 600; padding: 10px 14px; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.topbar {
+  align-items: center;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 20px 28px;
+}
+
+.brand { align-items: center; display: flex; gap: 12px; }
+.brand-logo { background: #fff; border-radius: 10px; height: 52px; object-fit: contain; padding: 3px; width: 52px; }
+.brand h1 { font-size: 21px; margin: 0; }
+.brand p { color: #d4e3ed; font-size: 12px; margin: 3px 0 0; }
+main { margin: 0 auto; max-width: 1440px; padding: 24px; }
+.toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; margin: 22px 0 14px; }
+.toolbar h2 { font-size: 19px; margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.primary { background: var(--blue); color: #fff; }
+.secondary { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+.danger { background: #fff0ef; color: var(--red); padding: 7px 9px; }
+.small { padding: 7px 9px; }
+
+.cards { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+.stat .label { color: var(--muted); font-size: 12px; }
+.stat .value { font-size: 28px; font-weight: 700; margin-top: 5px; }
+.stat .hint { color: var(--muted); font-size: 11px; margin-top: 3px; }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.panelhead { align-items: center; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding: 15px 17px; }
+.search { border: 1px solid var(--line); border-radius: 8px; outline-color: var(--blue); padding: 10px 12px; width: min(340px, 100%); }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; min-width: 1050px; width: 100%; }
+th, td { border-bottom: 1px solid #edf1f5; padding: 13px 14px; text-align: left; vertical-align: middle; }
+th { background: #f8fafc; color: #617382; font-size: 11px; letter-spacing: .045em; text-transform: uppercase; white-space: nowrap; }
+td { font-size: 13px; }
+tbody tr:hover { background: #f9fbfd; }
+.product { font-weight: 650; }
+.sub { color: var(--muted); font-size: 11px; margin-top: 3px; }
+.tag { background: #fff4d8; border-radius: 20px; color: #8b5b00; display: inline-block; font-size: 10px; font-weight: 700; padding: 4px 7px; }
+.rowactions { display: flex; gap: 6px; }
+.empty { color: var(--muted); padding: 35px; text-align: center; }
+footer { color: var(--muted); font-size: 11px; margin: 15px 2px; }
+
+.modalback { align-items: center; background: #10283c80; display: none; inset: 0; justify-content: center; padding: 18px; position: fixed; z-index: 5; }
+.modalback.open { display: flex; }
+.modal { background: #fff; border-radius: 14px; box-shadow: 0 20px 70px #10283c50; max-height: 92vh; overflow: auto; width: min(680px, 100%); }
+.modalhead { align-items: center; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding: 18px 22px; }
+.modalhead h2 { font-size: 18px; margin: 0; }
+.x { background: transparent; color: var(--muted); font-size: 23px; padding: 0 6px; }
+form { padding: 20px 22px; }
+.fields { display: grid; gap: 15px; grid-template-columns: 1fr 1fr; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+.field label { color: #415565; font-size: 12px; font-weight: 650; }
+.field input, .field select { border: 1px solid #cfd9e2; border-radius: 8px; padding: 10px 11px; }
+.field input:focus, .field select:focus { border-color: var(--blue); outline: 2px solid #b8d9ed; }
+.note { background: #fff8e8; border: 1px solid #f2dfac; border-radius: 8px; color: #795b13; font-size: 12px; margin: 0 0 16px; padding: 10px 12px; }
+.formfoot { display: flex; gap: 9px; justify-content: flex-end; margin-top: 20px; }
+.toast { background: #163d31; border-radius: 9px; bottom: 20px; box-shadow: 0 8px 24px #0002; color: #fff; display: none; padding: 12px 16px; position: fixed; right: 20px; z-index: 9; }
+
+.print-controls { align-items: end; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 20px; }
+.print-controls .field { min-width: 170px; }
+.preview-area { align-items: center; background: #eaf0f5; display: flex; justify-content: center; min-height: 260px; overflow: auto; padding: 22px; }
+.label-sheet { background: #fff; border: 1px solid #c9d2da; color: #111; flex-shrink: 0; overflow: hidden; padding: 4%; }
+.label-sheet.size-4x3 { height: 360px; width: 480px; }
+.label-sheet.size-4x2 { height: 240px; width: 480px; }
+.label-sheet.size-1x3 { font-size: 9px; height: 360px; padding: 5px; width: 120px; }
+.label-sheet.size-3x1 { font-size: 8px; height: 120px; padding: 4px; width: 360px; }
+.label-frame { border: 1.5px solid #222; display: grid; gap: 9px; grid-template-rows: auto minmax(0, 1fr) auto auto; height: 100%; min-width: 0; overflow: hidden; padding: 10px; }
+.label-heading { border-bottom: 3px double #222; display: flex; flex-direction: column; gap: 5px; padding: 0 0 8px; }
+.label-brand { align-items: center; display: flex; gap: 8px; min-height: 30px; }
+.label-logo { height: 32px; object-fit: contain; width: 32px; }
+.label-product { font-size: 1.45em; font-weight: 800; line-height: 1.12; overflow-wrap: anywhere; }
+.label-company { color: #b42318; font-size: .78em; font-weight: 800; line-height: 1.2; text-align: left; }
+.label-grid { align-content: start; display: grid; font-size: .92em; gap: 5px 18px; grid-template-columns: 1fr 1fr; min-height: 0; min-width: 0; }
+.label-field { display: grid; gap: 1px; min-width: 0; overflow-wrap: anywhere; }
+.label-field strong { font-size: .9em; letter-spacing: .025em; }
+.label-field span { font-size: 1.08em; overflow-wrap: anywhere; }
+.label-footer { border-top: 1px solid #555; color: #222; display: grid; font-size: .62em; gap: 3px; line-height: 1.25; padding-top: 5px; }
+.label-footer strong { font-size: 1.1em; }
+.label-hazards { align-items: center; display: flex; gap: 10px; justify-content: center; margin-top: auto; }
+.label-hazards img { height: 30px; object-fit: contain; width: 30px; }
+.label-sheet.size-4x2 .label-frame { gap: 5px; padding: 6px; }
+.label-sheet.size-4x2 .label-heading { gap: 3px; padding-bottom: 5px; }
+.label-sheet.size-4x2 .label-brand { gap: 5px; min-height: 20px; }
+.label-sheet.size-4x2 .label-logo { height: 22px; width: 22px; }
+.label-sheet.size-4x2 .label-product { font-size: 1.15em; }
+.label-sheet.size-4x2 .label-company { font-size: .68em; }
+.label-sheet.size-4x2 .label-grid { font-size: .78em; gap: 6px 12px; }
+.label-sheet.size-4x2 .label-field { align-items: baseline; column-gap: 5px; grid-template-columns: auto 1fr; }
+.label-sheet.size-4x2 .label-field strong, .label-sheet.size-4x2 .label-field span { font-size: 1em; }
+.label-sheet.size-4x2 .label-footer { font-size: .5em; gap: 2px; padding-top: 3px; }
+.label-sheet.size-4x2 .label-hazards { gap: 6px; }
+.label-sheet.size-4x2 .label-hazards img { height: 21px; width: 21px; }
+.label-sheet.size-1x3 .label-frame { gap: 5px; padding: 5px; }
+.label-sheet.size-1x3 .label-heading { gap: 3px; padding-bottom: 5px; }
+.label-sheet.size-1x3 .label-brand { gap: 3px; min-height: 14px; }
+.label-sheet.size-1x3 .label-logo { height: 15px; width: 15px; }
+.label-sheet.size-1x3 .label-product { font-size: 1em; }
+.label-sheet.size-1x3 .label-company { font-size: .58em; }
+.label-sheet.size-1x3 .label-grid { font-size: .75em; gap: 5px; grid-template-columns: 1fr; }
+.label-sheet.size-1x3 .label-field { gap: 1px; }
+.label-sheet.size-1x3 .label-footer { font-size: .5em; }
+.label-sheet.size-1x3 .label-hazards { gap: 4px; }
+.label-sheet.size-1x3 .label-hazards img { height: 17px; width: 17px; }
+.label-sheet.size-3x1 .label-frame { gap: 3px; padding: 4px 6px; }
+.label-sheet.size-3x1 .label-heading { align-items: center; border-bottom-width: 2px; flex-direction: row; gap: 8px; justify-content: space-between; padding-bottom: 3px; }
+.label-sheet.size-3x1 .label-brand { flex: 0 0 auto; gap: 4px; min-height: 18px; }
+.label-sheet.size-3x1 .label-logo { height: 18px; width: 18px; }
+.label-sheet.size-3x1 .label-company { font-size: .72em; }
+.label-sheet.size-3x1 .label-product { flex: 1; font-size: 1.05em; text-align: right; }
+.label-sheet.size-3x1 .label-grid { font-size: .68em; gap: 2px 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.label-sheet.size-3x1 .label-field { align-items: baseline; column-gap: 3px; grid-template-columns: auto 1fr; }
+.label-sheet.size-3x1 .label-field strong, .label-sheet.size-3x1 .label-field span { font-size: 1em; }
+.label-sheet.size-3x1 .label-footer { font-size: .42em; gap: 1px; line-height: 1.1; padding-top: 2px; }
+.label-sheet.size-3x1 .label-hazards { gap: 4px; }
+.label-sheet.size-3x1 .label-hazards img { height: 14px; width: 14px; }
+#printOnly { display: none; }
+.print-help { color: var(--muted); font-size: 12px; padding: 0 20px 18px; }
+
+@media print {
+  body.printing-label { background: #fff !important; margin: 0 !important; }
+  body.printing-label > *:not(#printOnly) { display: none !important; }
+  body.printing-label #printOnly { display: block !important; }
+  body.printing-label #printSheet { border: 0 !important; font-family: Arial, sans-serif !important; height: var(--label-height) !important; margin: 0 !important; padding: 2mm !important; width: var(--label-width) !important; }
+  body.printing-label #printSheet.size-1x3 { font-size: 7pt !important; padding: 1mm !important; }
+  body.printing-label #printSheet.size-3x1 { font-size: 6pt !important; padding: 1mm !important; }
+  @page { margin: 0; size: var(--label-width) var(--label-height); }
+}
+
+@media (max-width: 650px) {
+  main { padding: 15px; }
+  .topbar { padding: 16px; }
+  .cards, .fields { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+  .stat { padding: 14px; }
+  .stat .value { font-size: 24px; }
+}

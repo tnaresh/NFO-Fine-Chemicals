@@ -1,0 +1,24 @@
+[
+  {
+    "id": "sample-1",
+    "product": "Iron(II) sulfate heptahydrate",
+    "cas": "7782-63-0",
+    "cat": "",
+    "batch": "N2320210",
+    "formula": "FeSO₄·7H₂O",
+    "weight": "278.02 g/mol",
+    "density": "",
+    "pack": "500 gm"
+  },
+  {
+    "id": "sample-2",
+    "product": "Chloral Hydrate",
+    "cas": "7789-20-0",
+    "cat": "",
+    "batch": "NE05714",
+    "formula": "In(NO₃)₃·xH₂O",
+    "weight": "300.83 g/mol",
+    "density": "",
+    "pack": "5 LTR"
+  }
+]

@@ -1,0 +1,33 @@
+# Neo Fine Chemicals — Chemical Production
+
+A static production register with search, add/edit/delete, CSV export, and printable product labels. Each record has a product name plus CAS NO, CAT NO, BATCH NO, M. F, Mol . Wt, Density, and Pack size. Label sizes include 4 × 3, 4 × 2, 1 × 3, and 3 × 1 inches.
+
+## Run locally
+
+For everyday use on Windows, double-click **Start Neo Fine Chemicals.bat**. A PowerShell window will open, and the app will open in your browser. Keep the PowerShell window open while using the app; closing it stops the server. Your data remains saved.
+
+If needed, you can start it manually from PowerShell in this folder:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-server.ps1
+```
+
+The app address is <http://localhost:8000>. For shared data, always use that address rather than opening `index.html` directly.
+
+## Project layout
+
+- `index.html` contains the page structure and form/dialog markup.
+- `styles.css` contains the screen and print styles.
+- `js/app.js` handles rendering, user interactions, CSV export, and label printing.
+- `js/productionRepository.js` uses the JSON API in server mode and browser storage when opened directly as a file.
+- `start-server.ps1` serves the app and its local JSON API.
+- `Start Neo Fine Chemicals.bat` is the double-click launcher for Windows.
+- `data/production-items.json` is the shared production records file.
+
+## Data storage
+
+When served through `start-server.ps1`, records are saved in the ignored local file `data/production-items.json`; every browser using `http://localhost:8000` reads and updates that same file. If this file does not exist, the server initializes it from the tracked `data/production-items.example.json` sample. The live data file is excluded from Git so production records are not accidentally published. The server listens only on this computer, so it does not synchronize with other computers or over the internet.
+
+Opening `index.html` directly still works, but stores data separately in that browser's `localStorage` under `chemicalProductionItems_v1`; it does not sync with server mode or other browsers. To move records from direct-file mode, use **Export JSON** and copy the downloaded file over `data/production-items.json` while the server is stopped. Back up the JSON file regularly.
+
+To hand the app to another person, copy the entire project folder to their computer, preserving the `data` and `images` folders, then have them double-click the `.bat` launcher. If Windows displays a security prompt, allow the script to run only if this is the copy you provided.
