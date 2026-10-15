@@ -34,6 +34,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   padding: 20px 28px;
 }
 
+body.auth-locked > header, body.auth-locked > main { visibility: hidden; }
 .brand { align-items: center; display: flex; gap: 12px; }
 .brand-logo { background: #fff; border-radius: 10px; height: 52px; object-fit: contain; padding: 3px; width: 52px; }
 .brand h1 { font-size: 21px; margin: 0; }
@@ -71,6 +72,9 @@ footer { color: var(--muted); font-size: 11px; margin: 15px 2px; }
 .modalback { align-items: center; background: #10283c80; display: none; inset: 0; justify-content: center; padding: 18px; position: fixed; z-index: 5; }
 .modalback.open { display: flex; }
 .modal { background: #fff; border-radius: 14px; box-shadow: 0 20px 70px #10283c50; max-height: 92vh; overflow: auto; width: min(680px, 100%); }
+.login-modal { width: min(440px, 100%); }
+.login-description { color: var(--muted); margin: 0 0 16px; }
+.login-error { color: var(--red); font-size: 13px; min-height: 1.4em; }
 .modalhead { align-items: center; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding: 18px 22px; }
 .modalhead h2 { font-size: 18px; margin: 0; }
 .x { background: transparent; color: var(--muted); font-size: 23px; padding: 0 6px; }

@@ -146,6 +146,31 @@ $("closeModal").onclick = $("cancelBtn").onclick = closeForm;
 $("closePrintModal").onclick = closePrint;
 $("labelSize").addEventListener("change", updateLabelPreview);
 $("search").addEventListener("input", render);
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("loginError").textContent = "";
+  $("loginSubmit").disabled = true;
+  try {
+    await repository.login($("loginUsername").value.trim(), $("loginPassword").value);
+    items = await repository.list();
+    render();
+    $("loginModal").classList.remove("open");
+    document.body.classList.remove("auth-locked");
+    $("loginForm").reset();
+    $("logoutBtn").hidden = false;
+  } catch (error) {
+    $("loginError").textContent = error.status === 401 ? "Incorrect username or password." : error.message;
+  } finally {
+    $("loginSubmit").disabled = false;
+  }
+});
+$("logoutBtn").addEventListener("click", () => {
+  repository.logout();
+  items = [];
+  render();
+  showLogin();
+});
+window.addEventListener("sessionexpired", showLogin);
 $("modalback").addEventListener("click", event => {
   if (event.target === $("modalback")) closeForm();
 });
@@ -270,6 +295,29 @@ $("exportJsonBtn").onclick = () => {
 
 async function initialize() {
   try {
+    if (window.location.protocol === "file:") {
+      $("loginModal").classList.remove("open");
+      document.body.classList.remove("auth-locked");
+    } else {
+      const authStatus = await repository.authStatus();
+      if (authStatus.required) {
+        try {
+          items = await repository.list();
+          render();
+          $("loginModal").classList.remove("open");
+          document.body.classList.remove("auth-locked");
+          $("logoutBtn").hidden = false;
+          return;
+        } catch (error) {
+          if (error.status !== 401) throw error;
+          showLogin();
+          return;
+        }
+      }
+      $("loginModal").classList.remove("open");
+      document.body.classList.remove("auth-locked");
+    }
+
     items = await repository.list();
     render();
     if (window.location.protocol === "file:") {
@@ -280,6 +328,15 @@ async function initialize() {
   } catch (error) {
     showError(error);
   }
+}
+
+function showLogin() {
+  document.body.classList.add("auth-locked");
+  $("loginModal").classList.add("open");
+  $("logoutBtn").hidden = true;
+  $("loginError").textContent = "";
+  $("loginPassword").value = "";
+  $("loginUsername").focus();
 }
 
 initialize();

@@ -82,7 +82,9 @@ try {
       if ([string]::IsNullOrEmpty($path)) { $path = "/" }
       $method = $context.Request.HttpMethod
 
-      if ($path -eq "/api/items") {
+      if ($path -eq "/api/auth/status" -and $method -eq "GET") {
+        Send-Json $context 200 @{ required = $false }
+      } elseif ($path -eq "/api/items") {
         $items = @(Get-ProductionItems)
         if ($method -eq "GET") {
           Send-Json $context 200 $items
