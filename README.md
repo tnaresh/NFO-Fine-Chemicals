@@ -1,6 +1,6 @@
-# Neo Fine Chemicals — Chemical Production
+# NFO-Fine-Chemicals
 
-A static production register with search, add/edit/delete, CSV export, and printable product labels. Each record has a product name plus CAS NO, CAT NO, BATCH NO, M. F, Mol . Wt, Density, and Pack size. Label sizes include 4 × 3, 4 × 2, 1 × 3, and 3 × 1 inches.
+Production register and dashboard for Neo Fine Chemicals, with search, add/edit/delete, CSV/JSON export, and printable product labels. Each record has a product name plus CAS NO, CAT NO, BATCH NO, M. F, Mol . Wt, Density, and Pack size. Label sizes include 4 × 3, 4 × 2, 1 × 3, and 3 × 1 inches.
 
 ## Run locally
 
@@ -18,11 +18,11 @@ The app address is <http://localhost:8000>. For shared data, always use that add
 
 - `index.html` contains the page structure and form/dialog markup.
 - `styles.css` contains the screen and print styles.
-- `js/app.js` handles rendering, user interactions, CSV export, and label printing.
+- `js/app.js` handles rendering, user interactions, CSV/JSON export, and label printing.
 - `js/productionRepository.js` uses the JSON API in server mode and browser storage when opened directly as a file.
 - `start-server.ps1` serves the app and its local JSON API.
 - `Start Neo Fine Chemicals.bat` is the double-click launcher for Windows.
-- `data/production-items.json` is the shared production records file.
+- `data/production-items.example.json` provides clean sample records for first startup.
 
 ## Data storage
 
