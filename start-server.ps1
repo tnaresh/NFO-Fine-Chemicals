@@ -4,10 +4,37 @@ $root = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $dataPath = Join-Path $root "data\production-items.json"
 $seedPath = Join-Path $root "data\production-items.example.json"
 $utf8 = New-Object System.Text.UTF8Encoding($false)
+$legacyJsonSerializer = $null
+
+if ($PSVersionTable.PSVersion.Major -lt 3) {
+  try {
+    Add-Type -AssemblyName System.Web.Extensions
+    $legacyJsonSerializer = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+    $legacyJsonSerializer.MaxJsonLength = 10485760
+  } catch {
+    throw "Windows PowerShell 2 requires the .NET Framework System.Web.Extensions assembly to read and write JSON: $($_.Exception.Message)"
+  }
+}
+
+function ConvertFrom-JsonText([string]$text) {
+  if ($legacyJsonSerializer) {
+    return ,$legacyJsonSerializer.DeserializeObject($text)
+  }
+
+  return ConvertFrom-Json -InputObject $text
+}
+
+function ConvertTo-JsonText($value) {
+  if ($legacyJsonSerializer) {
+    return $legacyJsonSerializer.Serialize($value)
+  }
+
+  return ConvertTo-Json -InputObject $value -Depth 10 -Compress
+}
 
 function Get-ProductionItems {
   $contents = [System.IO.File]::ReadAllText($dataPath)
-  $parsed = ConvertFrom-Json -InputObject $contents
+  $parsed = ConvertFrom-JsonText $contents
   if ($parsed -isnot [System.Array]) {
     throw "The production data file must contain a JSON array."
   }
@@ -23,14 +50,14 @@ function Get-ProductionItems {
 }
 
 function Save-ProductionItems([object[]]$items) {
-  $json = ConvertTo-Json -InputObject @($items) -Depth 10
+  $json = ConvertTo-JsonText -value @($items)
   $temporaryPath = "$dataPath.$([Guid]::NewGuid().ToString('N')).tmp"
   [System.IO.File]::WriteAllText($temporaryPath, $json, $utf8)
   Move-Item -LiteralPath $temporaryPath -Destination $dataPath -Force
 }
 
 function Send-Json($context, [int]$statusCode, $value) {
-  $body = ConvertTo-Json -InputObject $value -Depth 10 -Compress
+  $body = ConvertTo-JsonText -value $value
   $bytes = $utf8.GetBytes($body)
   $context.Response.StatusCode = $statusCode
   $context.Response.ContentType = "application/json; charset=utf-8"
@@ -41,7 +68,7 @@ function Send-Json($context, [int]$statusCode, $value) {
 function Read-RequestJson($request) {
   $reader = New-Object System.IO.StreamReader($request.InputStream, $request.ContentEncoding)
   try {
-    return ConvertFrom-Json -InputObject $reader.ReadToEnd()
+    return ConvertFrom-JsonText $reader.ReadToEnd()
   } finally {
     $reader.Dispose()
   }
@@ -73,7 +100,25 @@ try {
   Write-Host "Neo Fine Chemicals is running at http://localhost:8000/"
   Write-Host "Shared records are stored in data\production-items.json. Keep this window open while using the app."
   Write-Host "Press Ctrl+C to stop the server."
-  Start-Process "http://localhost:8000/"
+  $browserPaths = @()
+  if ($env:ProgramFiles) {
+    $browserPaths += Join-Path $env:ProgramFiles "Google\Chrome\Application\chrome.exe"
+    $browserPaths += Join-Path $env:ProgramFiles "Mozilla Firefox\firefox.exe"
+  }
+  if (${env:ProgramFiles(x86)}) {
+    $browserPaths += Join-Path ${env:ProgramFiles(x86)} "Google\Chrome\Application\chrome.exe"
+    $browserPaths += Join-Path ${env:ProgramFiles(x86)} "Mozilla Firefox\firefox.exe"
+  }
+  if ($env:LOCALAPPDATA) {
+    $browserPaths += Join-Path $env:LOCALAPPDATA "Google\Chrome\Application\chrome.exe"
+    $browserPaths += Join-Path $env:LOCALAPPDATA "Mozilla Firefox\firefox.exe"
+  }
+  $browserPath = $browserPaths | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+  if ($browserPath) {
+    Start-Process -FilePath $browserPath -ArgumentList "http://localhost:8000/"
+  } else {
+    Write-Warning "Chrome or Firefox was not found. Internet Explorer is not supported. Open http://localhost:8000/ in an installed Chrome or Firefox browser."
+  }
 
   while ($listener.IsListening) {
     $context = $listener.GetContext()
@@ -91,7 +136,7 @@ try {
           if ([string]::IsNullOrWhiteSpace([string]$record.product)) {
             Send-Json $context 400 @{ error = "Product name is required." }
           } else {
-            $created = [ordered]@{
+            $created = @{
               id = [Guid]::NewGuid().ToString()
               product = [string]$record.product
               cas = [string]$record.cas
@@ -123,7 +168,7 @@ try {
           if ([string]::IsNullOrWhiteSpace([string]$record.product)) {
             Send-Json $context 400 @{ error = "Product name is required." }
           } else {
-            $updated = [ordered]@{
+            $updated = @{
               id = $id
               product = [string]$record.product
               cas = [string]$record.cas
@@ -134,7 +179,7 @@ try {
               density = [string]$record.density
               pack = [string]$record.pack
             }
-            $items[$index] = [PSCustomObject]$updated
+            $items[$index] = $updated
             Save-ProductionItems -items $items
             Send-Json $context 200 $updated
           }

@@ -14,6 +14,12 @@ powershell -ExecutionPolicy Bypass -File .\start-server.ps1
 
 The app address is <http://localhost:8000>. For shared data, always use that address rather than opening `index.html` directly.
 
+### Windows 7
+
+Run **Start Neo Fine Chemicals.bat** and use Chrome or Firefox; the launcher opens one of those browsers when installed. Internet Explorer is not supported, and opening `index.html` directly can trigger Internet Explorer's local-script security restriction. The server supports the Windows PowerShell 2.0 included with Windows 7 by using the .NET Framework `System.Web.Extensions` JSON serializer; if that assembly is unavailable, install or enable the .NET Framework 3.5 feature.
+
+Windows 7 is no longer supported by Microsoft, and current browser releases do not support it. Any browser version that still runs on Windows 7 is outdated and may have security vulnerabilities. Use this setup only on a trusted computer and upgrade Windows for continued secure use.
+
 ## Project layout
 
 - `index.html` contains the page structure and form/dialog markup.

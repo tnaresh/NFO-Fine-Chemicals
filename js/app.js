@@ -54,31 +54,34 @@ function render() {
 function labelMarkup(item) {
   return `
     <div class="label-frame">
+      <div class="label-brand">
+        <img class="label-logo" src="./images/neo-log.jpeg" alt="Neo Fine Chemicals logo">
+        <div class="label-company">Neo Fine Chemicals</div>
+      </div>
       <div class="label-heading">
-        <div class="label-brand">
-          <img class="label-logo" src="./images/neo-log.jpeg" alt="Neo Fine Chemicals logo">
-          <div class="label-company">Neo Fine Chemicals</div>
-        </div>
         <div class="label-product">${esc(item.product || "—")}</div>
       </div>
+      <div class="label-pack"><strong>Pack Size:</strong> <span>${esc(item.pack || "—")}</span></div>
       <div class="label-grid">
         <div class="label-field"><strong>CAS No.</strong><span>${esc(item.cas || "—")}</span></div>
-        <div class="label-field"><strong>Pack Size</strong><span>${esc(item.pack || "—")}</span></div>
-        <div class="label-field"><strong>Batch No.</strong><span>${esc(item.batch || "—")}</span></div>
         <div class="label-field"><strong>CAT No.</strong><span>${esc(item.cat || "—")}</span></div>
-        <div class="label-field"><strong>Mol. Wt.</strong><span>${esc(item.weight || "—")}</span></div>
+        <div class="label-field"><strong>Batch No.</strong><span>${esc(item.batch || "—")}</span></div>
         <div class="label-field"><strong>M. F.</strong><span>${esc(item.formula || "—")}</span></div>
+        <div class="label-field"><strong>Mol. Wt.</strong><span>${esc(item.weight || "—")}</span></div>
         ${item.density ? `<div class="label-field"><strong>Density</strong><span>${esc(item.density)}</span></div>` : ""}
       </div>
-      <div class="label-footer">
-        <strong>Disclaimer</strong>
-        <span>Keep cool and away from heat. Wear suitable personal protective equipment. For laboratory use only. Dispose of contents and container in accordance with local regulations.</span>
+      <div class="label-bottom">
+        <div class="label-footer">
+          <strong>Disclaimer</strong>
+          <span>Keep cool and away from heat. Wear suitable personal protective equipment. For laboratory use only. Dispose of contents and container in accordance with local regulations.</span>
+        </div>
+        <div class="label-hazards" aria-label="Hazard symbols">
+          <img src="./images/hazard-logo1.jpeg" alt="Corrosive hazard">
+          <img src="./images/hazard-logo2.jpeg" alt="Oxidizing hazard">
+          <img src="./images/hazard-logo3.jpeg" alt="Flammable hazard">
+        </div>
       </div>
-      <div class="label-hazards" aria-label="Hazard symbols">
-        <img src="./images/hazard-logo1.jpeg" alt="Corrosive hazard">
-        <img src="./images/hazard-logo2.jpeg" alt="Oxidizing hazard">
-        <img src="./images/hazard-logo3.jpeg" alt="Flammable hazard">
-      </div>
+      <div class="label-address">Chengicharla, Hyd, TG 500092</div>
     </div>
   `;
 }
