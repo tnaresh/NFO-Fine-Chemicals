@@ -1,0 +1,21 @@
+{
+  "name": "neo-fine-chemicals",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Neo Fine Chemicals production register with PostgreSQL persistence",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "import:json": "node scripts/import-json.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "pg": "^8.16.3"
+  }
+}

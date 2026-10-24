@@ -18,7 +18,10 @@
         <p>Chemical Production · Product and batch details</p>
       </div>
     </div>
-    <button class="primary" id="topAdd" type="button">＋ Add Item</button>
+    <div class="actions">
+      <button class="secondary" id="logoutBtn" type="button" hidden>Sign out</button>
+      <button class="primary" id="topAdd" type="button">＋ Add Item</button>
+    </div>
   </header>
 
   <main>
@@ -138,6 +141,29 @@
         </div>
       </form>
     </div>
+  </div>
+
+  <div class="modalback open" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <section class="modal login-modal">
+      <div class="modalhead"><h2 id="loginTitle">Sign in to Neo Fine Chemicals</h2></div>
+      <form id="loginForm">
+        <p class="login-description">Enter the account credentials provided by your administrator.</p>
+        <div class="fields">
+          <div class="field full">
+            <label for="loginUsername">Username</label>
+            <input id="loginUsername" name="username" autocomplete="username" required maxlength="100">
+          </div>
+          <div class="field full">
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required maxlength="200">
+          </div>
+        </div>
+        <p class="login-error" id="loginError" role="alert"></p>
+        <div class="formfoot">
+          <button class="primary" id="loginSubmit" type="submit">Sign in</button>
+        </div>
+      </form>
+    </section>
   </div>
 
   <div class="modalback" id="printModal" role="dialog" aria-modal="true" aria-labelledby="printModalTitle">

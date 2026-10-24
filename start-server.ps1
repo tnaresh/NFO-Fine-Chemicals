@@ -127,7 +127,9 @@ try {
       if ([string]::IsNullOrEmpty($path)) { $path = "/" }
       $method = $context.Request.HttpMethod
 
-      if ($path -eq "/api/items") {
+      if ($path -eq "/api/auth/status" -and $method -eq "GET") {
+        Send-Json $context 200 @{ required = $false }
+      } elseif ($path -eq "/api/items") {
         $items = @(Get-ProductionItems)
         if ($method -eq "GET") {
           Send-Json $context 200 $items
@@ -146,6 +148,8 @@ try {
               weight = [string]$record.weight
               density = [string]$record.density
               pack = [string]$record.pack
+              mfgDate = [string]$record.mfgDate
+              retestDate = [string]$record.retestDate
             }
             Save-ProductionItems -items (@($created) + $items)
             Send-Json $context 201 $created
@@ -178,6 +182,8 @@ try {
               weight = [string]$record.weight
               density = [string]$record.density
               pack = [string]$record.pack
+              mfgDate = [string]$record.mfgDate
+              retestDate = [string]$record.retestDate
             }
             $items[$index] = $updated
             Save-ProductionItems -items $items

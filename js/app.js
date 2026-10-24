@@ -56,9 +56,8 @@ function render() {
 function labelMarkup(item, size) {
   const showDates = !["4x2", "1x3", "3x1"].includes(size);
   const labelFields = [
-    { label: "Pack Size", value: item.pack || "—" },
     { label: "CAS No.", value: item.cas || "—" },
-    ...(item.cat || size !== "6x4" ? [{ label: "CAT No.", value: item.cat || "—" }] : []),
+    { label: "Pack Size", value: item.pack || "—" },
     { label: "Batch No.", value: item.batch || "—" },
     { label: "M. F.", value: item.formula || "—" },
     { label: "Mol. Wt.", value: item.weight || "—" },
@@ -69,7 +68,7 @@ function labelMarkup(item, size) {
     ] : []),
   ];
   if (size === "6x4") {
-    const order = ["CAS No.", "Pack Size", "Batch No.", "Mol. Wt.", "Density", "M. F.", "Mfg Date", "Retest Date", "CAT No."];
+    const order = ["CAS No.", "Pack Size", "Batch No.", "Mol. Wt.", "Density", "M. F.", "Mfg Date", "Retest Date"];
     labelFields.sort((a, b) => order.indexOf(a.label) - order.indexOf(b.label));
   }
 
@@ -92,8 +91,9 @@ function labelMarkup(item, size) {
           <span>Keep cool and away from heat. Wear suitable personal protective equipment. Do not breathe dust or mists. Dispose of contents and container in accordance with local, state, and federal regulations.</span>
         </div>` : ""}
         <div class="label-hazards" aria-label="Hazard symbols">
-          <img src="./images/hazard-flammable.png" alt="Flammable hazard">
-          <img src="./images/hazard-exclamation.png" alt="Warning hazard">
+          <img src="./images/hazard-logo1.jpeg" alt="Corrosive hazard">
+          <img src="./images/hazard-logo2.jpeg" alt="Oxidizing hazard">
+          <img src="./images/hazard-logo3.jpeg" alt="Flammable hazard">
         </div>
       </div>
       <div class="label-address">H No. 3-13-142/280, Gokul Nagar, Mallapur, Hyderabad, Medchal Malkajgiri, Telangana 500076</div>
@@ -164,6 +164,31 @@ $("closeModal").onclick = $("cancelBtn").onclick = closeForm;
 $("closePrintModal").onclick = closePrint;
 $("labelSize").addEventListener("change", updateLabelPreview);
 $("search").addEventListener("input", render);
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("loginError").textContent = "";
+  $("loginSubmit").disabled = true;
+  try {
+    await repository.login($("loginUsername").value.trim(), $("loginPassword").value);
+    items = await repository.list();
+    render();
+    $("loginModal").classList.remove("open");
+    document.body.classList.remove("auth-locked");
+    $("loginForm").reset();
+    $("logoutBtn").hidden = false;
+  } catch (error) {
+    $("loginError").textContent = error.status === 401 ? "Incorrect username or password." : error.message;
+  } finally {
+    $("loginSubmit").disabled = false;
+  }
+});
+$("logoutBtn").addEventListener("click", () => {
+  repository.logout();
+  items = [];
+  render();
+  showLogin();
+});
+window.addEventListener("sessionexpired", showLogin);
 $("modalback").addEventListener("click", event => {
   if (event.target === $("modalback")) closeForm();
 });
@@ -290,6 +315,29 @@ $("exportJsonBtn").onclick = () => {
 
 async function initialize() {
   try {
+    if (window.location.protocol === "file:") {
+      $("loginModal").classList.remove("open");
+      document.body.classList.remove("auth-locked");
+    } else {
+      const authStatus = await repository.authStatus();
+      if (authStatus.required) {
+        try {
+          items = await repository.list();
+          render();
+          $("loginModal").classList.remove("open");
+          document.body.classList.remove("auth-locked");
+          $("logoutBtn").hidden = false;
+          return;
+        } catch (error) {
+          if (error.status !== 401) throw error;
+          showLogin();
+          return;
+        }
+      }
+      $("loginModal").classList.remove("open");
+      document.body.classList.remove("auth-locked");
+    }
+
     items = await repository.list();
     render();
     if (window.location.protocol === "file:") {
@@ -300,6 +348,15 @@ async function initialize() {
   } catch (error) {
     showError(error);
   }
+}
+
+function showLogin() {
+  document.body.classList.add("auth-locked");
+  $("loginModal").classList.add("open");
+  $("logoutBtn").hidden = true;
+  $("loginError").textContent = "";
+  $("loginPassword").value = "";
+  $("loginUsername").focus();
 }
 
 initialize();

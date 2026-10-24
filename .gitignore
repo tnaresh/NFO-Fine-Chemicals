@@ -1,2 +1,6 @@
 /data/production-items.json
 /data/*.tmp
+/node_modules/
+/.env
+/.env.*
+/npm-debug.log*

@@ -1,4 +1,5 @@
 const STORAGE_KEY = "chemicalProductionItems_v1";
+const TOKEN_KEY = "neoFineApiToken";
 
 const initialItems = [
   {
@@ -75,16 +76,18 @@ function writeLocalItems(items) {
 
 async function requestApi(path, options = {}) {
   let response;
+  const token = sessionStorage.getItem(TOKEN_KEY);
   try {
     response = await fetch(path, {
       ...options,
       headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.body ? { "Content-Type": "application/json" } : {}),
         ...options.headers,
       },
     });
   } catch (error) {
-    throw new Error("Could not reach the local data server. Start start-server.ps1 and open http://localhost:8000.", { cause: error });
+    throw new Error("Could not reach the data server. Check that the server is running and try again.", { cause: error });
   }
 
   let payload;
@@ -95,7 +98,13 @@ async function requestApi(path, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(payload.error || `The local data server returned error ${response.status}.`);
+    if (response.status === 401 && path !== "/api/login") {
+      sessionStorage.removeItem(TOKEN_KEY);
+      window.dispatchEvent(new Event("sessionexpired"));
+    }
+    const error = new Error(payload.error || `The local data server returned error ${response.status}.`);
+    error.status = response.status;
+    throw error;
   }
 
   return payload;
@@ -109,6 +118,25 @@ function createProductionRepository() {
   const useLocalFileStorage = window.location.protocol === "file:";
 
   return {
+    async authStatus() {
+      if (useLocalFileStorage) return { required: false };
+      try {
+        return await requestApi("/api/auth/status");
+      } catch (error) {
+        if (error.status === 404) return { required: false };
+        throw error;
+      }
+    },
+    async login(username, password) {
+      const payload = await requestApi("/api/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+      });
+      sessionStorage.setItem(TOKEN_KEY, payload.token);
+    },
+    logout() {
+      sessionStorage.removeItem(TOKEN_KEY);
+    },
     async list() {
       if (useLocalFileStorage) return readLocalItems();
       return normalizeItems(await requestApi("/api/items"));
