@@ -1,6 +1,6 @@
 # NFO-Fine-Chemicals
 
-Production register and dashboard for Neo Fine Chemicals, with search, add/edit/delete, CSV/JSON export, and printable product labels. Each record has a product name plus CAS NO, CAT NO, BATCH NO, M. F, Mol . Wt, Density, and Pack size. Label sizes include 4 × 3, 4 × 2, 1 × 3, and 3 × 1 inches.
+Production register and dashboard for Neo Fine Chemicals, with search, add/edit/delete, CSV/JSON export, and printable product labels. Each record has a product name plus CAS NO, CAT NO, BATCH NO, M. F, Mol . Wt, Density, Pack size, Mfg Date, and Retest Date. Label sizes include 6 × 4, 4 × 6, 4 × 3, 4 × 2, 1 × 3, and 3 × 1 inches.
 
 ## Run locally
 

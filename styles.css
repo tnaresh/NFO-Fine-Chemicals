@@ -93,73 +93,88 @@ form { padding: 20px 22px; }
 .label-sheet.size-4x2 { font-size: 12px; height: 240px; width: 480px; }
 .label-sheet.size-1x3 { font-size: 9px; height: 360px; padding: 5px; width: 120px; }
 .label-sheet.size-3x1 { font-size: 8px; height: 120px; padding: 4px; width: 360px; }
-.label-frame { border: 1.5px solid #222; box-sizing: border-box; display: grid; gap: 6px; grid-template-rows: auto auto auto minmax(0, 1fr) auto auto; height: 100%; min-height: 0; min-width: 0; overflow: hidden; padding: 8px; }
+.label-sheet.size-6x4 { font-size: 18px; height: 480px; width: 720px; }
+.label-sheet.size-4x6 { font-size: 14px; height: 720px; width: 480px; }
+.label-frame { border: 1.5px solid #222; box-sizing: border-box; display: grid; gap: 6px; grid-template-rows: auto auto minmax(0, 1fr) auto auto auto; height: 100%; min-height: 0; min-width: 0; overflow: hidden; padding: 8px; }
 .label-brand { align-items: center; border-bottom: 1px solid #222; display: flex; flex-direction: row; gap: 6px; justify-content: center; padding-bottom: 4px; text-align: center; }
-.label-logo { height: 28px; object-fit: contain; width: 28px; }
-.label-company { color: #b42318; font-size: .78em; font-weight: 800; line-height: 1.2; }
+.label-logo { height: 36px; object-fit: contain; width: 36px; }
+.label-company { color: #f00; font-size: 1.5em; font-weight: 800; line-height: 1.2; text-transform: uppercase; }
 .label-heading { display: flex; justify-content: center; min-width: 0; }
 .label-product { border: 1px solid #222; font-size: 1.45em; font-weight: 800; line-height: 1.12; overflow-wrap: anywhere; padding: 5px 8px; text-align: center; }
-.label-pack { font-size: .9em; font-weight: 700; text-align: center; }
-.label-pack span { font-weight: 400; }
 .label-grid { align-content: start; display: grid; font-size: .92em; gap: 5px 18px; grid-template-columns: 1fr 1fr; min-height: 0; min-width: 0; }
-.label-field { display: grid; gap: 1px; min-width: 0; overflow-wrap: anywhere; }
+.label-field { align-items: baseline; column-gap: 5px; display: grid; grid-template-columns: minmax(0, 6.5em) minmax(0, 1fr); min-width: 0; overflow-wrap: anywhere; text-align: left; }
 .label-field strong { font-size: .9em; letter-spacing: .025em; }
-.label-field span { font-size: 1.08em; overflow-wrap: anywhere; }
+.label-field strong { white-space: nowrap; }
+.label-field strong::after { content: ":"; }
+.label-field span { font-size: 1.08em; min-width: 0; overflow-wrap: anywhere; }
+.label-storage { font-size: .72em; font-weight: 700; text-align: center; }
 .label-bottom { align-items: center; display: grid; gap: 10px; grid-template-columns: 1fr 1fr; min-width: 0; }
 .label-footer { color: #222; display: grid; font-size: .58em; gap: 3px; line-height: 1.15; min-width: 0; }
 .label-footer strong { font-size: 1.1em; }
 .label-hazards { align-items: center; display: flex; gap: 10px; justify-content: center; }
 .label-hazards img { height: 30px; object-fit: contain; width: 30px; }
-.label-address { border-top: 1px solid #555; font-size: .62em; padding-top: 4px; text-align: center; }
+.label-address { border-top: 1px solid #555; font-size: .5em; overflow-wrap: anywhere; padding-top: 4px; text-align: center; }
 .label-sheet.size-4x3 .label-frame { gap: 5px; padding: 6px; }
-.label-sheet.size-4x3 .label-logo { height: 23px; width: 23px; }
-.label-sheet.size-4x3 .label-company { font-size: .7em; }
+.label-sheet.size-4x3 .label-logo { height: 34px; width: 34px; }
+.label-sheet.size-4x3 .label-company { font-size: 1.35em; }
 .label-sheet.size-4x3 .label-product { font-size: 1.2em; padding: 3px 6px; }
-.label-sheet.size-4x3 .label-pack { font-size: .82em; }
-.label-sheet.size-4x3 .label-grid { font-size: .8em; gap: 4px 14px; }
+.label-sheet.size-4x3 .label-grid { font-size: .8em; gap: 4px 14px; margin-inline: auto; width: 90%; }
 .label-sheet.size-4x3 .label-field span { font-size: 1em; }
+.label-sheet.size-4x3 .label-storage { font-size: .65em; }
 .label-sheet.size-4x3 .label-bottom { gap: 6px; }
 .label-sheet.size-4x3 .label-footer { font-size: .5em; gap: 2px; line-height: 1.1; }
 .label-sheet.size-4x3 .label-hazards { gap: 6px; }
 .label-sheet.size-4x3 .label-hazards img { height: 24px; width: 24px; }
-.label-sheet.size-4x3 .label-address { font-size: .55em; padding-top: 3px; }
+.label-sheet.size-4x3 .label-address { font-size: .48em; padding-top: 3px; }
+.label-sheet.size-6x4 .label-frame { gap: 7px; padding: 9px; }
+.label-sheet.size-6x4 .label-logo { height: 64px; width: 64px; }
+.label-sheet.size-6x4 .label-company { font-size: 1.6em; }
+.label-sheet.size-6x4 .label-grid { font-size: .85em; gap: 7px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: auto; width: 90%; }
+.label-sheet.size-6x4 .label-storage { font-size: .7em; }
+.label-sheet.size-6x4 .label-footer { font-size: .56em; }
+.label-sheet.size-6x4 .label-hazards img { height: 30px; width: 30px; }
+.label-sheet.size-6x4 .label-address { font-size: .5em; }
+.label-sheet.size-4x6 .label-frame { gap: 7px; padding: 8px; }
+.label-sheet.size-4x6 .label-logo { height: 52px; width: 52px; }
+.label-sheet.size-4x6 .label-company { font-size: 1.6em; }
+.label-sheet.size-4x6 .label-grid { font-size: .92em; gap: 8px 18px; }
+.label-sheet.size-4x6 .label-storage { font-size: .72em; }
+.label-sheet.size-4x6 .label-footer { font-size: .58em; }
+.label-sheet.size-4x6 .label-hazards img { height: 30px; width: 30px; }
+.label-sheet.size-4x6 .label-address { font-size: .5em; }
 .label-sheet.size-4x2 .label-frame { gap: 4px; padding: 5px; }
-.label-sheet.size-4x2 .label-logo { height: 20px; width: 20px; }
-.label-sheet.size-4x2 .label-company { font-size: .65em; }
+.label-sheet.size-4x2 .label-logo { height: 30px; width: 30px; }
+.label-sheet.size-4x2 .label-company { font-size: 1.3em; }
 .label-sheet.size-4x2 .label-product { font-size: 1.15em; }
-.label-sheet.size-4x2 .label-pack { font-size: .78em; }
-.label-sheet.size-4x2 .label-grid { font-size: .78em; gap: 6px 12px; }
-.label-sheet.size-4x2 .label-field { align-items: baseline; column-gap: 5px; grid-template-columns: auto 1fr; }
+.label-sheet.size-4x2 .label-grid { font-size: .78em; gap: 4px 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .label-sheet.size-4x2 .label-field strong, .label-sheet.size-4x2 .label-field span { font-size: 1em; }
-.label-sheet.size-4x2 .label-bottom { gap: 6px; }
-.label-sheet.size-4x2 .label-footer { font-size: .55em; gap: 2px; line-height: 1.1; }
-.label-sheet.size-4x2 .label-address { font-size: .5em; padding-top: 3px; }
+.label-sheet.size-4x2 .label-storage { font-size: .62em; }
+.label-sheet.size-4x2 .label-bottom { gap: 4px; grid-template-columns: 1fr; justify-items: center; }
+.label-sheet.size-4x2 .label-address { font-size: .4em; padding-top: 3px; }
 .label-sheet.size-4x2 .label-hazards { gap: 6px; }
 .label-sheet.size-4x2 .label-hazards img { height: 21px; width: 21px; }
 .label-sheet.size-1x3 .label-frame { gap: 5px; padding: 5px; }
-.label-sheet.size-1x3 .label-logo { height: 13px; width: 13px; }
-.label-sheet.size-1x3 .label-company { font-size: .52em; }
+.label-sheet.size-1x3 .label-logo { height: 16px; width: 16px; }
+.label-sheet.size-1x3 .label-company { font-size: 1.08em; }
 .label-sheet.size-1x3 .label-product { font-size: 1em; }
-.label-sheet.size-1x3 .label-pack { font-size: .72em; }
-.label-sheet.size-1x3 .label-grid { font-size: .75em; gap: 5px; grid-template-columns: 1fr; }
-.label-sheet.size-1x3 .label-field { gap: 1px; }
-.label-sheet.size-1x3 .label-bottom { gap: 5px; grid-template-columns: 1fr; }
-.label-sheet.size-1x3 .label-footer { font-size: .5em; }
-.label-sheet.size-1x3 .label-address { font-size: .45em; padding-top: 2px; }
+.label-sheet.size-1x3 .label-grid { font-size: .65em; gap: 2px; grid-template-columns: 1fr; }
+.label-sheet.size-1x3 .label-storage { font-size: .5em; line-height: 1.05; }
+.label-sheet.size-1x3 .label-field { column-gap: 3px; }
+.label-sheet.size-1x3 .label-bottom { gap: 5px; grid-template-columns: 1fr; justify-items: center; }
+.label-sheet.size-1x3 .label-address { font-size: .38em; padding-top: 2px; }
 .label-sheet.size-1x3 .label-hazards { gap: 4px; }
 .label-sheet.size-1x3 .label-hazards img { height: 17px; width: 17px; }
 .label-sheet.size-3x1 .label-frame { gap: 3px; padding: 4px 6px; }
 .label-sheet.size-3x1 .label-brand { gap: 4px; }
-.label-sheet.size-3x1 .label-logo { height: 16px; width: 16px; }
-.label-sheet.size-3x1 .label-company { font-size: .65em; }
+.label-sheet.size-3x1 .label-logo { height: 24px; width: 24px; }
+.label-sheet.size-3x1 .label-company { font-size: 1.1em; }
 .label-sheet.size-3x1 .label-product { font-size: 1.05em; padding: 2px 4px; }
-.label-sheet.size-3x1 .label-pack { font-size: .68em; }
 .label-sheet.size-3x1 .label-grid { font-size: .68em; gap: 2px 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.label-sheet.size-3x1 .label-field { align-items: baseline; column-gap: 3px; grid-template-columns: auto 1fr; }
+.label-sheet.size-3x1 .label-field { column-gap: 3px; }
 .label-sheet.size-3x1 .label-field strong, .label-sheet.size-3x1 .label-field span { font-size: 1em; }
-.label-sheet.size-3x1 .label-bottom { gap: 4px; }
-.label-sheet.size-3x1 .label-footer { font-size: .42em; gap: 1px; line-height: 1.1; }
-.label-sheet.size-3x1 .label-address { font-size: .4em; padding-top: 2px; }
+.label-sheet.size-3x1 .label-storage { font-size: .52em; }
+.label-sheet.size-3x1 .label-bottom { gap: 4px; grid-template-columns: 1fr; justify-items: center; }
+.label-sheet.size-3x1 .label-address { font-size: .34em; padding-top: 2px; }
 .label-sheet.size-3x1 .label-hazards { gap: 4px; }
 .label-sheet.size-3x1 .label-hazards img { height: 14px; width: 14px; }
 #printOnly { display: none; }
