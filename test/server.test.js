@@ -17,15 +17,15 @@ const fakePool = {
       return { rows: [...records.values()], rowCount: records.size };
     }
     if (query.startsWith("INSERT INTO production_items")) {
-      const [id, product, cas, cat, batch, formula, weight, density, pack] = values;
-      const record = { id, product, cas, cat, batch, formula, weight, density, pack };
+      const [id, product, cas, cat, batch, formula, weight, density, pack, mfgDate, retestDate] = values;
+      const record = { id, product, cas, cat, batch, formula, weight, density, pack, mfgDate, retestDate };
       records.set(id, record);
       return { rows: [record], rowCount: 1 };
     }
     if (query.startsWith("UPDATE production_items")) {
-      const [id, product, cas, cat, batch, formula, weight, density, pack] = values;
+      const [id, product, cas, cat, batch, formula, weight, density, pack, mfgDate, retestDate] = values;
       if (!records.has(id)) return { rows: [], rowCount: 0 };
-      const record = { id, product, cas, cat, batch, formula, weight, density, pack };
+      const record = { id, product, cas, cat, batch, formula, weight, density, pack, mfgDate, retestDate };
       records.set(id, record);
       return { rows: [record], rowCount: 1 };
     }
@@ -104,6 +104,12 @@ test("validates and persists a production item through CRUD endpoints", async ()
     body: JSON.stringify({ product: "x".repeat(151) }),
   });
   assert.equal(invalid.response.status, 400);
+  const invalidDate = await jsonRequest("/api/items", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ product: "Date validation test", mfgDate: "x".repeat(41) }),
+  });
+  assert.equal(invalidDate.response.status, 400);
 
   const values = {
     product: "PostgreSQL API test item",
@@ -114,6 +120,8 @@ test("validates and persists a production item through CRUD endpoints", async ()
     weight: "18.02 g/mol",
     density: "1.00 g/cm3",
     pack: "250 mL",
+    mfgDate: "24-OCT-2026",
+    retestDate: "24-OCT-2027",
   };
   const created = await jsonRequest("/api/items", {
     method: "POST",
@@ -126,6 +134,8 @@ test("validates and persists a production item through CRUD endpoints", async ()
   const list = await jsonRequest("/api/items", { headers });
   assert.equal(list.payload.length, 1);
   assert.equal(list.payload[0].id, created.payload.id);
+  assert.equal(list.payload[0].mfgDate, values.mfgDate);
+  assert.equal(list.payload[0].retestDate, values.retestDate);
 
   const updated = await jsonRequest(`/api/items/${created.payload.id}`, {
     method: "PUT",
@@ -134,6 +144,8 @@ test("validates and persists a production item through CRUD endpoints", async ()
   });
   assert.equal(updated.response.status, 200);
   assert.equal(updated.payload.product, "Updated API test item");
+  assert.equal(updated.payload.mfgDate, values.mfgDate);
+  assert.equal(updated.payload.retestDate, values.retestDate);
 
   const removed = await jsonRequest(`/api/items/${created.payload.id}`, {
     method: "DELETE",

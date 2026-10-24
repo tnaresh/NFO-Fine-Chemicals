@@ -38,6 +38,8 @@ function normalizeItems(items) {
     ...item,
     cat: item.cat ?? "",
     density: item.density ?? "",
+    mfgDate: item.mfgDate ?? "",
+    retestDate: item.retestDate ?? "",
   }));
 }
 

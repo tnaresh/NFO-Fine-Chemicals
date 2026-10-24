@@ -1,4 +1,4 @@
-const fields = ["product", "cas", "cat", "batch", "formula", "weight", "density", "pack"];
+const fields = ["product", "cas", "cat", "batch", "formula", "weight", "density", "pack", "mfgDate", "retestDate"];
 const $ = id => document.getElementById(id);
 const repository = window.createProductionRepository();
 let items = [];
@@ -20,7 +20,7 @@ function esc(value) {
 function render() {
   const query = $("search").value.trim().toLowerCase();
   const shown = items.filter(item =>
-    [item.product, item.cas, item.cat, item.batch, item.formula, item.weight, item.density, item.pack]
+    [item.product, item.cas, item.cat, item.batch, item.formula, item.weight, item.density, item.pack, item.mfgDate, item.retestDate]
       .some(value => String(value || "").toLowerCase().includes(query))
   );
 
@@ -36,6 +36,8 @@ function render() {
       <td>${esc(item.weight || "—")}</td>
       <td>${esc(item.density || "—")}</td>
       <td>${esc(item.pack || "—")}</td>
+      <td>${esc(item.mfgDate || "—")}</td>
+      <td>${esc(item.retestDate || "—")}</td>
       <td>
         <div class="rowactions">
           <button class="secondary small" type="button" data-print="${esc(item.id)}">Print</button>
@@ -51,34 +53,50 @@ function render() {
   $("catCount").textContent = items.filter(item => String(item.cat || "").trim()).length;
 }
 
-function labelMarkup(item) {
+function labelMarkup(item, size) {
+  const showDates = !["4x2", "1x3", "3x1"].includes(size);
+  const labelFields = [
+    { label: "Pack Size", value: item.pack || "—" },
+    { label: "CAS No.", value: item.cas || "—" },
+    ...(item.cat || size !== "6x4" ? [{ label: "CAT No.", value: item.cat || "—" }] : []),
+    { label: "Batch No.", value: item.batch || "—" },
+    { label: "M. F.", value: item.formula || "—" },
+    { label: "Mol. Wt.", value: item.weight || "—" },
+    ...(item.density || size === "6x4" ? [{ label: "Density", value: item.density || "—" }] : []),
+    ...(showDates ? [
+      { label: "Mfg Date", value: item.mfgDate || "—" },
+      { label: "Retest Date", value: item.retestDate || "—" },
+    ] : []),
+  ];
+  if (size === "6x4") {
+    const order = ["CAS No.", "Pack Size", "Batch No.", "Mol. Wt.", "Density", "M. F.", "Mfg Date", "Retest Date", "CAT No."];
+    labelFields.sort((a, b) => order.indexOf(a.label) - order.indexOf(b.label));
+  }
+
   return `
     <div class="label-frame">
+      <div class="label-brand">
+        <img class="label-logo" src="./images/neo-log.jpeg" alt="Neo Fine Chemicals logo">
+        <div class="label-company">Neo Fine Chemicals</div>
+      </div>
       <div class="label-heading">
-        <div class="label-brand">
-          <img class="label-logo" src="./images/neo-log.jpeg" alt="Neo Fine Chemicals logo">
-          <div class="label-company">Neo Fine Chemicals</div>
-        </div>
         <div class="label-product">${esc(item.product || "—")}</div>
       </div>
       <div class="label-grid">
-        <div class="label-field"><strong>CAS No.</strong><span>${esc(item.cas || "—")}</span></div>
-        <div class="label-field"><strong>Pack Size</strong><span>${esc(item.pack || "—")}</span></div>
-        <div class="label-field"><strong>Batch No.</strong><span>${esc(item.batch || "—")}</span></div>
-        <div class="label-field"><strong>CAT No.</strong><span>${esc(item.cat || "—")}</span></div>
-        <div class="label-field"><strong>Mol. Wt.</strong><span>${esc(item.weight || "—")}</span></div>
-        <div class="label-field"><strong>M. F.</strong><span>${esc(item.formula || "—")}</span></div>
-        ${item.density ? `<div class="label-field"><strong>Density</strong><span>${esc(item.density)}</span></div>` : ""}
+        ${labelFields.map(field => `<div class="label-field"><strong>${field.label}</strong><span>${esc(field.value)}</span></div>`).join("")}
       </div>
-      <div class="label-footer">
-        <strong>Disclaimer</strong>
-        <span>Keep cool and away from heat. Wear suitable personal protective equipment. For laboratory use only. Dispose of contents and container in accordance with local regulations.</span>
+      <div class="label-storage">For Laboratory Use Only · Store at Room Temperature</div>
+      <div class="label-bottom">
+        ${showDates ? `<div class="label-footer">
+          <strong>Disclaimer</strong>
+          <span>Keep cool and away from heat. Wear suitable personal protective equipment. Do not breathe dust or mists. Dispose of contents and container in accordance with local, state, and federal regulations.</span>
+        </div>` : ""}
+        <div class="label-hazards" aria-label="Hazard symbols">
+          <img src="./images/hazard-flammable.png" alt="Flammable hazard">
+          <img src="./images/hazard-exclamation.png" alt="Warning hazard">
+        </div>
       </div>
-      <div class="label-hazards" aria-label="Hazard symbols">
-        <img src="./images/hazard-logo1.jpeg" alt="Corrosive hazard">
-        <img src="./images/hazard-logo2.jpeg" alt="Oxidizing hazard">
-        <img src="./images/hazard-logo3.jpeg" alt="Flammable hazard">
-      </div>
+      <div class="label-address">H No. 3-13-142/280, Gokul Nagar, Mallapur, Hyderabad, Medchal Malkajgiri, Telangana 500076</div>
     </div>
   `;
 }
@@ -89,7 +107,7 @@ function updateLabelPreview() {
   ["previewSheet", "printSheet"].forEach(id => {
     const sheet = $(id);
     sheet.className = `label-sheet size-${size}`;
-    sheet.innerHTML = labelMarkup(printingItem);
+    sheet.innerHTML = labelMarkup(printingItem, size);
   });
 }
 
@@ -187,7 +205,7 @@ window.addEventListener("afterprint", finishPrinting);
 
 $("printNow").onclick = () => {
   if (!printingItem) return;
-  const dimensions = { "4x3": [4, 3], "4x2": [4, 2], "1x3": [1, 3], "3x1": [3, 1] }[$("labelSize").value];
+  const dimensions = { "6x4": [6, 4], "4x6": [4, 6], "4x3": [4, 3], "4x2": [4, 2], "1x3": [1, 3], "3x1": [3, 1] }[$("labelSize").value];
   if (!dimensions) {
     showError(new Error("Select a supported label size before printing."));
     return;
@@ -266,6 +284,8 @@ $("exportBtn").onclick = () => {
     ["Mol . Wt", "weight"],
     ["Density", "density"],
     ["Pack size", "pack"],
+    ["Mfg Date", "mfgDate"],
+    ["Retest Date", "retestDate"],
   ];
   const quote = value => `"${String(value ?? "").replace(/"/g, '""')}"`;
   const csv = [

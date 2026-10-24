@@ -25,16 +25,18 @@ async function main() {
         throw new Error(`Record ${index + 1} must have a string id and a non-empty product name.`);
       }
 
-      const fields = ["product", "cas", "cat", "batch", "formula", "weight", "density", "pack"];
+      const fields = ["product", "cas", "cat", "batch", "formula", "weight", "density", "pack", "mfgDate", "retestDate"];
+      const databaseFields = fields.map(field => ["mfgDate", "retestDate"].includes(field) ? `"${field}"` : field);
       const values = fields.map(field => {
         const value = item[field] ?? "";
         if (typeof value !== "string") throw new Error(`Record ${index + 1}: ${field} must be text.`);
         return value;
       });
+      const placeholders = Array.from({ length: fields.length + 1 }, (_, valueIndex) => `$${valueIndex + 1}`);
 
       const result = await client.query(`
-        INSERT INTO production_items (id, ${fields.join(", ")})
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        INSERT INTO production_items (id, ${databaseFields.join(", ")})
+        VALUES (${placeholders.join(", ")})
         ON CONFLICT (id) DO NOTHING
       `, [item.id, ...values]);
       inserted += result.rowCount;

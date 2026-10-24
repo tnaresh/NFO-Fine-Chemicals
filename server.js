@@ -13,7 +13,8 @@ const tokenLifetimeMs = 8 * 60 * 60 * 1000;
 const username = process.env.APP_USERNAME || "";
 const password = process.env.APP_PASSWORD || "";
 const appSecret = process.env.APP_SECRET || "";
-const itemFields = ["product", "cas", "cat", "batch", "formula", "weight", "density", "pack"];
+const itemFields = ["product", "cas", "cat", "batch", "formula", "weight", "density", "pack", "mfgDate", "retestDate"];
+const databaseField = field => ["mfgDate", "retestDate"].includes(field) ? `"${field}"` : field;
 const fieldLimits = {
   product: 150,
   cas: 40,
@@ -23,6 +24,8 @@ const fieldLimits = {
   weight: 60,
   density: 60,
   pack: 60,
+  mfgDate: 40,
+  retestDate: 40,
 };
 
 if (!username || password.length < 12 || appSecret.length < 32) {
@@ -139,7 +142,7 @@ app.post("/api/login", loginLimiter, (request, response) => {
 app.get("/api/items", requireAuthentication, async (request, response, next) => {
   try {
     const result = await pool.query(`
-      SELECT id, product, cas, cat, batch, formula, weight, density, pack
+      SELECT id, ${itemFields.map(field => `${databaseField(field)} AS "${field}"`).join(", ")}
       FROM production_items
       ORDER BY updated_at DESC, created_at DESC
     `);
@@ -159,10 +162,12 @@ app.post("/api/items", requireAuthentication, async (request, response, next) =>
   try {
     const id = crypto.randomUUID();
     const values = itemFields.map(field => record[field]);
+    const placeholders = Array.from({ length: itemFields.length + 1 }, (_, index) => `$${index + 1}`);
+    const databaseFields = itemFields.map(databaseField);
     const result = await pool.query(`
-      INSERT INTO production_items (id, ${itemFields.join(", ")})
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING id, ${itemFields.join(", ")}
+      INSERT INTO production_items (id, ${databaseFields.join(", ")})
+      VALUES (${placeholders.join(", ")})
+      RETURNING id, ${itemFields.map(field => `${databaseField(field)} AS "${field}"`).join(", ")}
     `, [id, ...values]);
     response.status(201).json(result.rows[0]);
   } catch (error) {
@@ -178,12 +183,12 @@ app.put("/api/items/:id", requireAuthentication, async (request, response, next)
   }
 
   try {
-    const assignments = itemFields.map((field, index) => `${field} = $${index + 2}`);
+    const assignments = itemFields.map((field, index) => `${databaseField(field)} = $${index + 2}`);
     const result = await pool.query(`
       UPDATE production_items
       SET ${assignments.join(", ")}, updated_at = NOW()
       WHERE id = $1
-      RETURNING id, ${itemFields.join(", ")}
+      RETURNING id, ${itemFields.map(field => `${databaseField(field)} AS "${field}"`).join(", ")}
     `, [request.params.id, ...itemFields.map(field => record[field])]);
     if (result.rowCount === 0) {
       response.status(404).json({ error: "The production item could not be found." });

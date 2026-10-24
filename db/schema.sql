@@ -8,9 +8,15 @@ CREATE TABLE IF NOT EXISTS production_items (
   weight TEXT NOT NULL DEFAULT '',
   density TEXT NOT NULL DEFAULT '',
   pack TEXT NOT NULL DEFAULT '',
+  "mfgDate" TEXT NOT NULL DEFAULT '',
+  "retestDate" TEXT NOT NULL DEFAULT '',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE production_items
+  ADD COLUMN IF NOT EXISTS "mfgDate" TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS "retestDate" TEXT NOT NULL DEFAULT '';
 
 CREATE INDEX IF NOT EXISTS production_items_updated_at_idx
   ON production_items (updated_at DESC);
