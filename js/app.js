@@ -114,8 +114,8 @@ function updateLabelPreview() {
 function openPrint(item) {
   printingItem = item;
   $("labelSize").value = "4x3";
-  updateLabelPreview();
   $("printModal").classList.add("open");
+  updateLabelPreview();
 }
 
 function closePrint() {

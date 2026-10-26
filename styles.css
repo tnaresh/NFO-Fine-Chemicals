@@ -104,7 +104,7 @@ form { padding: 20px 22px; }
 .label-logo { height: 36px; left: var(--company-left); object-fit: contain; position: absolute; top: 50%; transform: translateY(-50%); width: 36px; }
 .label-company { color: #f00; font-family: Algerian, "Times New Roman", serif; font-size: 1.5em; font-weight: 400; left: 50%; line-height: 1.2; position: absolute; text-align: center; text-transform: uppercase; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; }
 .label-heading { display: flex; justify-content: center; min-width: 0; }
-.label-product { border: 1px solid #222; font-size: 1.45em; font-weight: 800; line-height: 1.12; overflow-wrap: anywhere; padding: 5px 8px; text-align: center; }
+.label-product { border: 1px solid #222; box-sizing: border-box; font-size: 1.45em; font-weight: 800; line-height: 1.12; max-width: 100%; min-width: 0; overflow: hidden; padding: 5px 8px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .label-grid { align-content: start; display: grid; font-size: .92em; gap: 5px 18px; grid-template-columns: 1fr 1fr; margin-left: var(--company-left); min-height: 0; min-width: 0; width: calc(100% - var(--company-left)); }
 .label-field { align-items: baseline; column-gap: 5px; display: grid; grid-template-columns: minmax(0, 6.5em) minmax(0, 1fr); min-width: 0; overflow-wrap: anywhere; text-align: left; }
 .label-field strong { font-size: .9em; letter-spacing: .025em; }
