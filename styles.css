@@ -135,7 +135,7 @@ form { padding: 20px 22px; }
 .label-sheet.size-6x4 .label-brand { min-height: 68px; }
 .label-sheet.size-6x4 .label-logo { height: 64px; width: 64px; }
 .label-sheet.size-6x4 .label-company { font-size: 1.6em; }
-.label-sheet.size-6x4 .label-grid { font-size: .85em; gap: 7px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.label-sheet.size-6x4 .label-grid { align-content: stretch; font-size: .85em; gap: 7px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); }
 .label-sheet.size-6x4 .label-storage { font-size: .7em; }
 .label-sheet.size-6x4 .label-footer { font-size: .56em; }
 .label-sheet.size-6x4 .label-hazards img { height: 30px; width: 30px; }
